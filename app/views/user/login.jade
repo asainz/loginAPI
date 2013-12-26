@@ -11,3 +11,8 @@ block content
             input(name="password",id="password",type="password")
         div
             input(type="submit", value="Login!")
+        div
+            if invalidUsername
+                p Your username wasn't recognized.
+            if invalidPassword
+                p Your password is not correct.

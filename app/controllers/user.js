@@ -4,7 +4,10 @@ var mongoose = require('mongoose'),
     password = require('./password');
 
 exports.login = function(req, res){
-    res.render('user/login');
+    res.render('user/login', {
+        invalidUsername: req.query.invalid === 'username',
+        invalidPassword: req.query.invalid === 'password'
+    });
 };
 
 exports.profile = function(req, res){
