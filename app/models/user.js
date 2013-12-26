@@ -3,7 +3,7 @@ var mongoose = require('mongoose'),
 
 var UserSchema = new Schema({
     // id: {type: String, default: '1'},
-    username: String,
+    username: {type: String, unique: true},
     saltDb: String,
     password: String,
     lastLogin: {type: Date, default: Date.now},
@@ -13,10 +13,5 @@ var UserSchema = new Schema({
         email: String
     }
 });
-
-// ArticleSchema.virtual('date')
-//   .get(function(){
-//     return this._id.getTimestamp();
-//   });
 
 mongoose.model('User', UserSchema);

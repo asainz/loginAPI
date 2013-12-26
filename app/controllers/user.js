@@ -36,9 +36,16 @@ exports.doRegister = function(req, res){
     }).save(function(err, user){
         if(err){
             console.log('error: ', err);
+
+            if(err.code===11000){
+                res.redirect( '/?exists=true' );
+            }else{
+                res.redirect('/?error=true');
+            }
+
             return;
         }
-        console.log(user);
+
         req.session.loggedIn = true;
         req.session.user = {username: user.username, password: user.password};
 
