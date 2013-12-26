@@ -1,7 +1,7 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
-var UserProfileSchema = new Schema({
+var UserSchema = new Schema({
     // id: {type: String, default: '1'},
     username: String,
     saltDb: String,
@@ -19,4 +19,4 @@ var UserProfileSchema = new Schema({
 //     return this._id.getTimestamp();
 //   });
 
-mongoose.model('UserProfile', UserProfileSchema);
+mongoose.model('User', UserSchema);

@@ -1,25 +1,43 @@
 var mongoose = require('mongoose'),
-    UserProfile = mongoose.model('UserProfile');
+    UserModel = mongoose.model('User');
 
-exports.createProfile = function(req, res){
-    var profile = new UserProfile({
-        username: 'gege',
-        saltDb: '123123123123123123',
-        password: '21323csdsad213',
+exports.login = function(req, res){
+    res.render('user/login');
+};
+
+exports.profile = function(req, res){
+    if( req.session.loggedIn ){
+        res.render('user/profile', {
+            username: req.session.user.username
+        });
+    }else{
+        res.redirect('/login');
+    }
+};
+
+exports.register = function(req, res){
+    res.render('user/register');
+};
+
+exports.doRegister = function(req, res){
+    var user = new UserModel({
+        username: req.body.username,
+        password: req.body.password,
+        saltDb: '123',
         profile: {
-            firstname: 'andres',
-            lastname: 'sainz',
-            email: 'andressainz@gmail.com'
+            firstname: '',
+            lastname: '',
+            email: ''
         }
-    });
-    profile.save();
+    }).save(function(err, user){
+        if(err){
+            console.log('error: ', err);
+            return;
+        }
+        console.log(user);
+        req.session.loggedIn = true;
+        req.session.user = {username: user.username, password: user.password};
 
-    res.render('home/greetings');
-  // Article.find(function(err, articles){
-  //   if(err) throw new Error(err);
-  //   res.render('home/index', {
-  //     title: 'Generator-Express MVC',
-  //     articles: articles
-  //   });
-  // });
+        res.redirect( '/profile' );
+    });
 };
