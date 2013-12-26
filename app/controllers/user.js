@@ -38,11 +38,43 @@ exports.doRegister = function(req, res){
             console.log('error: ', err);
 
             if(err.code===11000){
-                res.redirect( '/?exists=true' );
+                res.redirect( '/login?exists=true' );
             }else{
-                res.redirect('/?error=true');
+                res.redirect('/login?error=true');
             }
 
+            return;
+        }
+
+        req.session.loggedIn = true;
+        req.session.user = {username: user.username, password: user.password};
+
+        res.redirect( '/profile' );
+    });
+};
+
+exports.doLogin = function(req, res){
+    //check if username exists
+    //if exists, get saltDb and check password
+    //if credentials are valid, go to profile
+    //if credentials are invalid, show error
+
+    UserModel.findOne({username: req.body.username}, function(err, user){
+        if(err){
+            console.log('error: ', err);
+            res.refirect('/login?error=true');
+            return;
+        }
+
+        if(!user){
+            res.redirect('/login?invalid=username');
+            return;
+        }
+
+        console.log(req.body.password);
+
+        if( !password.validate(req.body.password, user.saltDb, user.password) ){
+            res.redirect('/login?invalid=password');
             return;
         }
 
