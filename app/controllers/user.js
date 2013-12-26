@@ -1,5 +1,7 @@
 var mongoose = require('mongoose'),
-    UserModel = mongoose.model('User');
+    UserModel = mongoose.model('User'),
+    salt = require('./salt'),
+    password = require('./password');
 
 exports.login = function(req, res){
     res.render('user/login');
@@ -20,10 +22,12 @@ exports.register = function(req, res){
 };
 
 exports.doRegister = function(req, res){
+    var saltDb = salt.create();
+
     var user = new UserModel({
         username: req.body.username,
-        password: req.body.password,
-        saltDb: '123',
+        password: password.encode(req.body.password, saltDb),
+        saltDb: saltDb,
         profile: {
             firstname: '',
             lastname: '',
